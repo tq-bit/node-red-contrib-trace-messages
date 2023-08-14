@@ -1,0 +1,49 @@
+<script type="text/javascript">
+	RED.nodes.registerType('trace', {
+		category: 'hooks',
+		color: '#9e4d90',
+		defaults: {
+			name: { value: '' },
+			extraMessagePropsToBeTraced: { value: '' },
+		},
+		outputs: 1,
+		icon: 'font-awesome/fa-search',
+		label: function () {
+			return this.name ? this.name : 'Trace message';
+		},
+	});
+</script>
+
+<script type="text/html" data-template-name="trace">
+	<div class="form-row">
+		<label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+		<input type="text" id="node-input-name" placeholder="Name" />
+	</div>
+	<div class="form-row">
+		<label for="node-input-extraMessagePropsToBeTraced"
+			><i class="fa fa-commenting-o"></i> Extra Props</label
+		>
+		<input
+			type="text"
+			id="node-input-extraMessagePropsToBeTraced"
+			placeholder="Add additional msg. properties to be traced"
+		/>
+	</div>
+	<div class="form-tips">
+		<b>Additional properties must be comma-separated strings</b>
+	</div>
+
+</script>
+
+<script type="text/html" data-help-name="trace">
+	<p>
+		This node aggregates all messages that are received by other nodes in your flows. It is useful
+		for debugging or profiling how your flows are applying data transformations.
+	</p>
+	<blockquote>
+		By default, only <code>msg.payload</code> and <code>msg.topic</code> are traced. You can
+		trace additional properties by adding them to the <code>extraMessagePropsToBeTraced</code>
+		field. <br/><b>Additional properties must be comma-separated strings</b>
+	</blockquote>
+</div>
+</script>
