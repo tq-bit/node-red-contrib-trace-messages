@@ -13,7 +13,7 @@
 		"trace",
 		"debug",
 		"messages",
-		"compare-messages"
+		"compare"
 	],
 	"author": "tobi@q-bit.me",
 	"license": "Apache License 2.0",
