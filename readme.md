@@ -12,6 +12,8 @@ By default, it tracks the `msg.payload` and `msg.topic` properties. You can add 
 
 Draw the 'trace' node into your editor. Its output will provide you a detailed message trace as an object and as an array. You can either print these in the console or use any kind of application to visualize them.
 
+> How about you try and combine this node with my [Server-Sent-Events node](https://www.npmjs.com/package/@tq-bit/node-red-contrib-server-sent-events) to send messages to a connected client?
+
 ### Example
 
 The example output below stems from the [examples/trace_short_custom_props.json](examples/trace_short_flow.json) example. It provides a detailed insight into the message flow, including a `delta` property that shows how the message's properties have changed.
