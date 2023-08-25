@@ -1,6 +1,6 @@
 {
 	"name": "@tq-bit/node-red-contrib-trace-messages",
-	"version": "1.0.1",
+	"version": "1.1.0",
 	"description": "Node to track and aggregate messages over your flows",
 	"main": "index.js",
 	"scripts": {
