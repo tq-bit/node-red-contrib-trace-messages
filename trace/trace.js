@@ -18,19 +18,19 @@ function handleNodeTrace(node, ev) {
 	}
 
 	function getMessage(ev) {
-		const { topic, payload, } = ev.msg;
+		const { topic, payload } = ev.msg;
 
 		// Add topic and payload to message
 		const message = {
 			topic,
-			payload
-		}
+			payload,
+		};
 
 		// Append extra properties to be traced if there are any
-		if(node.extraMessagePropsToBeTraced.length > 0) {
-			node.extraMessagePropsToBeTraced.forEach(propertyToBeTraced => {
+		if (node.extraMessagePropsToBeTraced.length > 0) {
+			node.extraMessagePropsToBeTraced.forEach((propertyToBeTraced) => {
 				message[propertyToBeTraced] = ev.msg[propertyToBeTraced] || null;
-			})
+			});
 		}
 
 		return message;
@@ -46,11 +46,8 @@ function handleNodeTrace(node, ev) {
 	if (!node.trace[messageTraceId]) {
 		node.trace[messageTraceId] = {
 			traceList: [],
-			traceMap: {},
 		};
 	}
-
-	const traceStepKey = Object.keys(node.trace[messageTraceId].traceMap).length;
 
 	// Add to the current message trace list
 	node.trace[messageTraceId].traceList.push({
@@ -59,17 +56,14 @@ function handleNodeTrace(node, ev) {
 		message,
 	});
 
-	// Add to the current message trace map
-	node.trace[messageTraceId].traceMap[traceStepKey] = {
-		sourceNode,
-		destNode,
-		message,
-	}
-
 	// If no next node is known, send the current message trace
 	if (!hasNextNode) {
-		const { traceMap, traceList } = node.trace[messageTraceId];
-		const msg = { payload: { traceMap, traceList } };
+		const { traceList } = node.trace[messageTraceId];
+		const traceMap = traceList.reduce((previous, current, index) => {
+			previous[index] = current;
+			return previous;
+		}, {})
+		const msg = { payload: { traceList, traceMap } };
 		node.send(msg);
 		delete node.trace[messageTraceId];
 	}
@@ -80,7 +74,8 @@ module.exports = function (RED) {
 		RED.nodes.createNode(this, config);
 
 		this.name = config.name;
-		this.extraMessagePropsToBeTraced = config.extraMessagePropsToBeTraced?.split(',').map(prop => prop.trim()) || [];
+		this.extraMessagePropsToBeTraced =
+			config.extraMessagePropsToBeTraced?.split(',').map((prop) => prop.trim()) || [];
 		this.trace = {};
 		RED.hooks.add('preDeliver', (ev) => {
 			if (ev?.source?.node?.type !== 'trace') {
