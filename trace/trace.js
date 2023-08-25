@@ -1,6 +1,71 @@
+function deepCompareObjects(a, b, path = '') {
+	const results = [];
+	const checkTypeHasChanged = (a, b) => {
+		const aIsArray = Array.isArray(a);
+		const bIsArray = Array.isArray(b);
+		if (aIsArray !== bIsArray) {
+			return true;
+		}
+		return typeof a !== typeof b;
+	};
+
+	const checkValueHasChanged = (a, b) => {
+		return typeof a === 'object' ? JSON.stringify(a) !== JSON.stringify(b) : a !== b;
+	};
+
+	// Filter out duplicate values by the property 'propertyPath'
+	const removeDuplicates = (arr) => {
+		return arr.filter((o_n, index, self) => {
+			return index === self.findIndex((o_m) => o_m.propertyPath === o_n.propertyPath);
+		});
+	};
+
+	const handleObjectComparison = (key) => {
+		const previousValue = a[key];
+		const currentValue = b[key];
+		const propertyPath = path ? `${path}.${key}` : key;
+
+		// New Property check
+		const propertyAddedOrRemoved = a.hasOwnProperty(key) && !b.hasOwnProperty(key);
+
+		// Type checks
+		const typeHasChanged = checkTypeHasChanged(previousValue, currentValue);
+		const previousType = Array.isArray(previousValue) ? 'array' : typeof previousValue;
+		const currentType = Array.isArray(currentValue) ? 'array' : typeof currentValue;
+
+		// Value checks
+		const valueHasChanged = checkValueHasChanged(previousValue, currentValue);
+
+		results.push({
+			propertyAddedOrRemoved,
+			typeHasChanged,
+			valueHasChanged,
+			propertyPath,
+			previousType,
+			currentType,
+			previousValue,
+			currentValue,
+		});
+
+		if (typeof currentValue === 'object' && typeof previousValue === 'object') {
+			results.push(...deepCompareObjects(previousValue, currentValue, propertyPath));
+		}
+	};
+
+	for (let key in a) {
+		handleObjectComparison(key);
+	}
+
+	for (let key in b) {
+		handleObjectComparison(key);
+	}
+
+	return removeDuplicates(results);
+}
+
 function handleNodeTrace(node, ev) {
 	function getMessageId(ev) {
-		return ev.msg._msgid;
+		return ev.msg?._msgid;
 	}
 
 	function getSourceNode(ev) {
@@ -58,12 +123,23 @@ function handleNodeTrace(node, ev) {
 
 	// If no next node is known, send the current message trace
 	if (!hasNextNode) {
-		const { traceList } = node.trace[messageTraceId];
-		const traceMap = traceList.reduce((previous, current, index) => {
+		const { traceList } = node.trace[messageTraceId]
+		const traceListWithDelta = traceList.map((traceListItem, index, self) => {
+			if(index === 0) {
+				return traceListItem;
+			}
+
+			const previousTraceListItem = self[index - 1];
+			return {
+				...traceListItem,
+				delta: deepCompareObjects(previousTraceListItem.message, traceListItem.message)
+			};
+		})
+		const traceMap = traceListWithDelta.reduce((previous, current, index) => {
 			previous[index] = current;
 			return previous;
-		}, {})
-		const msg = { payload: { traceList, traceMap } };
+		}, {});
+		const msg = { payload: { traceList: traceListWithDelta, traceMap } };
 		node.send(msg);
 		delete node.trace[messageTraceId];
 	}
