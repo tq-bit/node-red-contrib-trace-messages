@@ -123,18 +123,18 @@ function handleNodeTrace(node, ev) {
 
 	// If no next node is known, send the current message trace
 	if (!hasNextNode) {
-		const { traceList } = node.trace[messageTraceId]
+		const { traceList } = node.trace[messageTraceId];
 		const traceListWithDelta = traceList.map((traceListItem, index, self) => {
-			if(index === 0) {
+			if (index === 0) {
 				return traceListItem;
 			}
 
 			const previousTraceListItem = self[index - 1];
 			return {
 				...traceListItem,
-				delta: deepCompareObjects(previousTraceListItem.message, traceListItem.message)
+				delta: deepCompareObjects(previousTraceListItem.message, traceListItem.message),
 			};
-		})
+		});
 		const traceMap = traceListWithDelta.reduce((previous, current, index) => {
 			previous[index] = current;
 			return previous;
