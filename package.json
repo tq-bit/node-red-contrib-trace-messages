@@ -12,7 +12,8 @@
 		"node-red",
 		"trace",
 		"debug",
-		"messages"
+		"messages",
+		"compare-messages"
 	],
 	"author": "tobi@q-bit.me",
 	"license": "Apache License 2.0",
