@@ -1,3 +1,5 @@
+const path = require('path');
+
 function deepCompareObjects(a, b, path = '') {
 	const results = [];
 	const checkTypeHasChanged = (a, b) => {
@@ -159,5 +161,25 @@ module.exports = function (RED) {
 			}
 		});
 	}
+
+	function sendFile(res, filename) {
+		// Use the right function depending on Express 3.x/4.x
+		if (res.sendFile) {
+			res.sendFile(filename);
+		} else {
+			res.sendfile(filename);
+		}
+	}
+
+	RED.httpAdmin.get('/trace/ui/index.html', (req, res) => {
+		const filename = path.join(__dirname, 'client', 'dist', 'index.html');
+		sendFile(res, filename);
+	});
+
+	RED.httpAdmin.get('/trace/ui/assets/*', (req, res) => {
+		const filename = path.join(__dirname, 'client', 'dist', 'assets', req.params[0]);
+		sendFile(res, filename);
+	});
+
 	RED.nodes.registerType('trace', Trace);
 };
