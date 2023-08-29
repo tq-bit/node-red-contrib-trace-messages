@@ -9,6 +9,11 @@ onMounted(() => traceStore.connect())
 
 <template>
   <h1>Home Page</h1>
+  <ul>
+    <li v-for="(trace) in traceStore.traceLists" :key="trace.id">
+    {{ trace.receivedAt }} | {{ trace.id }}
+  </li>
+  </ul>
   {{ traceStore.traceLists }}
 </template>
 
