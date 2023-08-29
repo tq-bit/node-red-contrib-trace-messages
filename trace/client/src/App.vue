@@ -4,7 +4,7 @@ import { RouterLink, RouterView } from 'vue-router'
 import AppBar from './components/AppBar.vue';
 import AppNav from './components/AppNav.vue';
 
-const showNav = ref(false)
+const showNav = ref(true)
 </script>
 
 <template>
@@ -18,10 +18,6 @@ const showNav = ref(false)
         <RouterView></RouterView>
       </v-main>
     </v-layout>
-
-
-    <RouterLink to="/">Home</RouterLink>
-    <RouterLink to="/about">About</RouterLink>
 
   </div>
 </template>

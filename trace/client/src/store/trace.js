@@ -12,6 +12,9 @@ export const useTraceStore = defineStore('trace', {
 		],
 		error: null,
 	}),
+	getters: {
+		getTraceById: (state) => (id) => state.traceLists.find((trace) => trace.id === id),
+	},
 	actions: {
 		connect(endpoint) {
 			const events = new EventSource(endpoint || 'http://localhost:1880/api/sse');
