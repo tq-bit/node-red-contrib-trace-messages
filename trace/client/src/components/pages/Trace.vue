@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { useTraceStore } from '../store/trace';
+import { useTraceStore } from '../../store/trace';
 
 const traceStore = useTraceStore();
 
