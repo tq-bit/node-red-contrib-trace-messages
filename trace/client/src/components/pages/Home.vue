@@ -5,9 +5,8 @@ import { useRouter } from 'vue-router';
 
 const traceStore = useTraceStore();
 const router = useRouter();
-const handleOpenMessageTrace = (id) => {
-  router.push(`/trace/${id}`);
-}
+
+const handleOpenMessageTrace = (id) => router.push(`/trace/${id}`)
 
 onMounted(() => traceStore.connect());
 </script>
