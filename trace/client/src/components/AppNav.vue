@@ -8,7 +8,7 @@ const router = useRouter();
 <template>
   <v-navigation-drawer v-model="props.showNav">
     <v-list>
-      <v-list-item v-for="item in router.getRoutes()" :key="item.path" :value="item">
+      <v-list-item v-for="item in router.getRoutes().filter(route => !route.path.includes(':'))" :key="item.path" :value="item">
         <RouterLink :to="item.path" style="text-decoration: none; color: inherit">
           <v-list-item-title v-text="item.name"></v-list-item-title>
         </RouterLink>

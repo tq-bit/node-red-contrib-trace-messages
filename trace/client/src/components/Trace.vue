@@ -5,9 +5,7 @@ import { useTraceStore } from '../store/trace';
 
 const traceStore = useTraceStore();
 
-const activeTrace = computed(() => {
-	return traceStore.getTraceById(+useRoute().params.id);
-})
+const activeTrace = computed(() =>  traceStore.getTraceById(+useRoute().params.id))
 </script>
 
 <template>

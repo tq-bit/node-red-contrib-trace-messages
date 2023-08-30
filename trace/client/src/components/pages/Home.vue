@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted } from 'vue';
-import { useTraceStore } from '../store/trace';
+import { useTraceStore } from '../../store/trace';
 import { useRouter } from 'vue-router';
 
 const traceStore = useTraceStore();
