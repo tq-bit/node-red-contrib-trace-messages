@@ -21,12 +21,13 @@ function deepCompareObjects(a, b, path = '') {
 	};
 
 	const handleObjectComparison = (key) => {
-		const previousValue = a[key];
-		const currentValue = b[key];
+		const previousValue = a?.[key];
+		const currentValue = b?.[key];
 		const propertyPath = path ? `${path}.${key}` : key;
 
 		// New Property check
-		const propertyAddedOrRemoved = a.hasOwnProperty(key) && !b.hasOwnProperty(key);
+		const propertyRemoved = !!previousValue && typeof currentValue === 'undefined';
+		const propertyAddedOrRemoved = a?.hasOwnProperty(key) && !b?.hasOwnProperty(key) || true;
 
 		// Type checks
 		const typeHasChanged = checkTypeHasChanged(previousValue, currentValue);
@@ -37,7 +38,8 @@ function deepCompareObjects(a, b, path = '') {
 		const valueHasChanged = checkValueHasChanged(previousValue, currentValue);
 
 		results.push({
-			propertyAddedOrRemoved,
+			propertyAdded,
+			propertyRemoved,
 			typeHasChanged,
 			valueHasChanged,
 			propertyPath,
