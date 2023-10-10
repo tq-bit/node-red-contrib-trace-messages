@@ -1,3 +1,5 @@
+'use strict';
+
 function deepCompareObjects(a, b, path = '') {
 	const results = [];
 	const checkTypeHasChanged = (a, b) => {
@@ -26,8 +28,8 @@ function deepCompareObjects(a, b, path = '') {
 		const propertyPath = path ? `${path}.${key}` : key;
 
 		// New Property check
+		const propertyAdded = !previousValue && !!currentValue;
 		const propertyRemoved = !!previousValue && typeof currentValue === 'undefined';
-		const propertyAddedOrRemoved = a?.hasOwnProperty(key) && !b?.hasOwnProperty(key) || true;
 
 		// Type checks
 		const typeHasChanged = checkTypeHasChanged(previousValue, currentValue);
