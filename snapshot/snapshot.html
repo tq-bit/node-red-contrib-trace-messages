@@ -1,32 +1,32 @@
 <script type="text/javascript">
-	RED.nodes.registerType('trace', {
+	RED.nodes.registerType('snapshot', {
 		category: 'hooks',
 		color: '#9e4d90',
 		defaults: {
 			name: { value: '' },
-			extraMessagePropsToBeTraced: { value: '' },
+			ignore: { value: '' }
 		},
 		outputs: 1,
-		icon: 'font-awesome/fa-search',
+		icon: 'font-awesome/fa-camera-retro',
 		label: function () {
-			return this.name ? this.name : 'Trace message';
+			return this.name ? this.name : 'Trace snapshot';
 		},
 	});
 </script>
 
-<script type="text/html" data-template-name="trace">
+<script type="text/html" data-template-name="snapshot">
 	<div class="form-row">
 		<label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
 		<input type="text" id="node-input-name" placeholder="Name" />
 	</div>
 	<div class="form-row">
-		<label for="node-input-extraMessagePropsToBeTraced"
-			><i class="fa fa-commenting-o"></i> Extra Props</label
+		<label for="node-input-ignore"
+			><i class="fa fa-commenting-o"></i> Node types to ignore</label
 		>
 		<input
 			type="text"
-			id="node-input-extraMessagePropsToBeTraced"
-			placeholder="Add additional msg. properties to be traced"
+			id="node-input-ignore"
+			placeholder="Which nodes to ignore"
 		/>
 	</div>
 	<div class="form-tips">
@@ -35,14 +35,14 @@
 
 </script>
 
-<script type="text/html" data-help-name="trace">
+<script type="text/html" data-help-name="snapshot">
 	<p>
 		This node aggregates all messages that are received by other nodes in your flows. It is useful
 		for debugging or profiling how your flows are applying data transformations.
 	</p>
 	<blockquote>
-		By default, only <code>msg.payload</code> and <code>msg.topic</code> are traced. You can
-		trace additional properties by adding them to the <code>extraMessagePropsToBeTraced</code>
+		By default, only <code>msg.payload</code> and <code>msg.topic</code> are snapshotd. You can
+		snapshot additional properties by adding them to the <code>extraMessagePropsToBesnapshotd</code>
 		field. <br/><b>Additional properties must be comma-separated strings</b>
 	</blockquote>
 </div>

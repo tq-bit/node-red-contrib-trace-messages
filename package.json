@@ -23,7 +23,8 @@
 	"node-red": {
 		"version": ">3.0.0",
 		"nodes": {
-			"trace": "trace/trace.js"
+			"snapshot": "snapshot/snapshot.js",
+			"transaction": "transaction/transaction.js"
 		}
 	}
 }

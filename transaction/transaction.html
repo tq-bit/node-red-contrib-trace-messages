@@ -1,0 +1,45 @@
+<script type="text/javascript">
+	RED.nodes.registerType('transaction', {
+		category: 'hooks',
+		color: '#9e4d90',
+		defaults: {
+			name: { value: '' },
+			ignore: { value: '' }
+		},
+		outputs: 1,
+		icon: 'font-awesome/fa-exchange',
+		label: function () {
+			return this.name ? this.name : 'Trace Transaction';
+		},
+	});
+</script>
+
+<script type="text/html" data-template-name="transaction">
+	<div class="form-row">
+		<label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+		<input type="text" id="node-input-name" placeholder="Name" />
+	</div>
+	<div class="form-row">
+		<label for="node-input-ignore"
+			><i class="fa fa-commenting-o"></i> Node types to ignore</label
+		>
+		<input
+			type="text"
+			id="node-input-ignore"
+			placeholder="Which nodes to ignore"
+		/>
+	</div>
+	<div class="form-tips">
+		<b>Additional node types to ignore must be comma-separated strings</b>
+	</div>
+
+</script>
+
+<script type="text/html" data-help-name="transaction">
+	<p>
+		This node aggregates all messages that are received by other nodes in your flows. It is useful
+		for debugging or profiling how your flows are applying data transformations. The term 'transaction'
+		refers to the lifecycle of a single message object.
+	</p>
+</div>
+</script>
