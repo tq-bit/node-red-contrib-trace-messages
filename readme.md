@@ -1,8 +1,16 @@
 # Node Red message trace
 
-This module adds a debug node to your node-red instance. It will trace messages and their properties as they flow through your app.
+This module adds two debug nodes to your node-red instance. Both are meant to create a trace from how the message went through your flows. This is especially useful when trying to debug bigger flows.
 
-By default, it tracks the `msg.payload` and `msg.topic` properties. You can add custom properties as well.
+The idea is as follows:
+
+- Each time a message starts to flow, a transaction is created
+- This transaction starts with the first node the message passes and ends with the final one
+- Each time, right before the message is passed ahead to the next node, a snapshot is created
+- This snapshot shows the current state of the flow right before the message was passed ahead
+- By looking at transactions and snapshots, you can see how the message went through your flows
+
+By looking at these transactions and snapshots, you're able to keep track of your flow's state.
 
 ## Node
 
@@ -10,200 +18,117 @@ By default, it tracks the `msg.payload` and `msg.topic` properties. You can add 
 
 ### Usage
 
-Draw the 'trace' node into your editor. Its output will provide you a detailed message trace as an object and as an array. You can either print these in the console or use any kind of application to visualize them.
+Depending on your needs, draw one or both nodes into your flow. Each time a `preDeliver` hook is triggered, they will start to create a snapshot or build up a transaction
 
-> How about you try and combine this node with my [Server-Sent-Events node](https://www.npmjs.com/package/@tq-bit/node-red-contrib-server-sent-events) to send messages to a connected client?
+- The `snapshot` node will send one message every time any node sends a message
+- The `transaction` will send once a flow ends. This means when a node has no next node connected to it.
 
-### Example
+You can either analyze these messages one by one or use a dedicated software to store and display them.
 
-The example output below stems from the [examples/trace_short_custom_props.json](examples/trace_short_flow.json) example. It provides a detailed insight into the message flow, including a `delta` property that shows how the message's properties have changed.
+### Example transaction
 
 <details>
 <summary>Click to expand</summary>
 
 <pre>
-<code>[
-	{
-		sourceNode: { id: 'd5534eb0c652c49b', type: 'inject' },
-		destNode: { id: 'e720ad3fda390317', type: 'function', name: 'Set message topic' },
-		message: { topic: '', payload: 1692971913389, myProperty: null, myOtherProperty: null },
-	},
-	{
-		sourceNode: { id: 'e720ad3fda390317', type: 'function', name: 'Set message topic' },
-		destNode: { id: '061d8e72a9f3b7da', type: 'function', name: 'Set message payload' },
-		message: { topic: 'Trace me', payload: 1692971913389, myProperty: null, myOtherProperty: null },
-		delta: [
-			{
-				propertyAddedOrRemoved: false,
-				typeHasChanged: false,
-				valueHasChanged: true,
-				propertyPath: 'topic',
-				previousType: 'string',
-				currentType: 'string',
-				previousValue: '',
-				currentValue: 'Trace me',
-			},
-			{
-				propertyAddedOrRemoved: false,
-				typeHasChanged: false,
-				valueHasChanged: false,
-				propertyPath: 'payload',
-				previousType: 'number',
-				currentType: 'number',
-				previousValue: 1692971913389,
-				currentValue: 1692971913389,
-			},
-			{
-				propertyAddedOrRemoved: false,
-				typeHasChanged: false,
-				valueHasChanged: false,
-				propertyPath: 'myProperty',
-				previousType: 'object',
-				currentType: 'object',
-				previousValue: null,
-				currentValue: null,
-			},
-			{
-				propertyAddedOrRemoved: false,
-				typeHasChanged: false,
-				valueHasChanged: false,
-				propertyPath: 'myOtherProperty',
-				previousType: 'object',
-				currentType: 'object',
-				previousValue: null,
-				currentValue: null,
-			},
-		],
-	},
-	{
-		sourceNode: { id: '061d8e72a9f3b7da', type: 'function', name: 'Set message payload' },
-		destNode: { id: 'a63124c968e6e122', type: 'function', name: 'Set msg custom props' },
-		message: {
-			topic: 'Trace me',
-			payload: { message: 'I am being traced' },
-			myProperty: null,
-			myOtherProperty: null,
-		},
-		delta: [
-			{
-				propertyAddedOrRemoved: false,
-				typeHasChanged: false,
-				valueHasChanged: false,
-				propertyPath: 'topic',
-				previousType: 'string',
-				currentType: 'string',
-				previousValue: 'Trace me',
-				currentValue: 'Trace me',
-			},
-			{
-				propertyAddedOrRemoved: false,
-				typeHasChanged: true,
-				valueHasChanged: true,
-				propertyPath: 'payload',
-				previousType: 'number',
-				currentType: 'object',
-				previousValue: 1692971913389,
-				currentValue: { message: 'I am being traced' },
-			},
-			{
-				propertyAddedOrRemoved: false,
-				typeHasChanged: false,
-				valueHasChanged: false,
-				propertyPath: 'myProperty',
-				previousType: 'object',
-				currentType: 'object',
-				previousValue: null,
-				currentValue: null,
-			},
-			{
-				propertyAddedOrRemoved: false,
-				typeHasChanged: false,
-				valueHasChanged: false,
-				propertyPath: 'myOtherProperty',
-				previousType: 'object',
-				currentType: 'object',
-				previousValue: null,
-				currentValue: null,
-			},
-		],
-	},
-	{
-		sourceNode: { id: 'a63124c968e6e122', type: 'function', name: 'Set msg custom props' },
-		destNode: { id: '4f8824a5dcde4a04', type: 'debug', name: 'timestamp_out' },
-		message: {
-			topic: 'Trace me',
-			payload: { message: 'I am being traced' },
-			myProperty: 'Aye',
-			myOtherProperty: 123,
-		},
-		delta: [
-			{
-				propertyAddedOrRemoved: false,
-				typeHasChanged: false,
-				valueHasChanged: false,
-				propertyPath: 'topic',
-				previousType: 'string',
-				currentType: 'string',
-				previousValue: 'Trace me',
-				currentValue: 'Trace me',
-			},
-			{
-				propertyAddedOrRemoved: false,
-				typeHasChanged: false,
-				valueHasChanged: false,
-				propertyPath: 'payload',
-				previousType: 'object',
-				currentType: 'object',
-				previousValue: { message: 'I am being traced' },
-				currentValue: { message: 'I am being traced' },
-			},
-			{
-				propertyAddedOrRemoved: false,
-				typeHasChanged: false,
-				valueHasChanged: false,
-				propertyPath: 'payload.message',
-				previousType: 'string',
-				currentType: 'string',
-				previousValue: 'I am being traced',
-				currentValue: 'I am being traced',
-			},
-			{
-				propertyAddedOrRemoved: false,
-				typeHasChanged: true,
-				valueHasChanged: true,
-				propertyPath: 'myProperty',
-				previousType: 'object',
-				currentType: 'string',
-				previousValue: null,
-				currentValue: 'Aye',
-			},
-			{
-				propertyAddedOrRemoved: false,
-				typeHasChanged: true,
-				valueHasChanged: true,
-				propertyPath: 'myOtherProperty',
-				previousType: 'object',
-				currentType: 'number',
-				previousValue: null,
-				currentValue: 123,
-			},
-		],
-	},
-];
-</pre>
+<code>{
+  "id": "7638d6e34cedd04a",
+  "msgid": "798279120a2bc4d2",
+  "start": 1706291131979,
+  "end": 1706291132056,
+  "steps": [
+    {
+      "node": "inject-d5534eb0c652c49b",
+      "createdAt": 1706291131979,
+      "snapshotId": "798279120a2bc4d2-d5534eb0c652c49b-0"
+    },
+    {
+      "node": "function-Set message topic",
+      "createdAt": 1706291131980,
+      "snapshotId": "798279120a2bc4d2-e720ad3fda390317-0"
+    },
+    {
+      "node": "function-Set message payload",
+      "createdAt": 1706291131980,
+      "snapshotId": "798279120a2bc4d2-061d8e72a9f3b7da-0"
+    },
+    {
+      "node": "function-Set msg.tray props",
+      "createdAt": 1706291131980,
+      "snapshotId": "798279120a2bc4d2-6d2ea66d942a61ab-0"
+    },
+    {
+      "node": "http request-Make HTTP Request",
+      "createdAt": 1706291132056,
+      "snapshotId": "798279120a2bc4d2-5213280d268d46ee-0"
+    }
+  ]
+}
 </code>
+</pre>
 </details>
 
-### Usage with JSONCrack
+### Example Snapshot
 
-The node was designed to make debugging complex flows easier. It works well together with [jsoncrack](https://jsoncrack.com/editor) to visualize what nodes a message passes and how its properties change.
+<details>
+<summary>Click to expand</summary>
 
-JSONCrack can help you to identify possible problems with the message flow. The following image shows what a part of the `traceMap` output can look like:
+<pre>
+<code>{
+  "id": "798279120a2bc4d2-5213280d268d46ee-0",
+  "node": "http request-Make HTTP Request",
+  "createdAt": 1706291132056,
+  "msg": {
+    "_msgid": "798279120a2bc4d2",
+    "payload": "{\n  \"userId\": 1,\n  \"id\": 1,\n  \"title\": \"delectus aut autem\",\n  \"completed\": false\n}",
+    "topic": "Trace me",
+    "tray": [
+      "One",
+      "Two",
+      "Three"
+    ],
+    "statusCode": 200,
+    "headers": {
+      "date": "Fri, 26 Jan 2024 17:45:32 GMT",
+      "content-type": "application/json; charset=utf-8",
+      "content-length": "83",
+      "connection": "keep-alive",
+      "report-to": "{\"group\":\"heroku-nel\",\"max_age\":3600,\"endpoints\":[{\"url\":\"https://nel.heroku.com/reports?ts=1699752124&sid=e11707d5-02a7-43ef-b45e-2cf4d2036f7d&s=skaKxrbiIhywhXvbeO7mNJqywVneznPNDj4G0m%2BwPzs%3D\"}]}",
+      "reporting-endpoints": "heroku-nel=https://nel.heroku.com/reports?ts=1699752124&sid=e11707d5-02a7-43ef-b45e-2cf4d2036f7d&s=skaKxrbiIhywhXvbeO7mNJqywVneznPNDj4G0m%2BwPzs%3D",
+      "nel": "{\"report_to\":\"heroku-nel\",\"max_age\":3600,\"success_fraction\":0.005,\"failure_fraction\":0.05,\"response_headers\":[\"Via\"]}",
+      "x-powered-by": "Express",
+      "x-ratelimit-limit": "1000",
+      "x-ratelimit-remaining": "999",
+      "x-ratelimit-reset": "1699752164",
+      "vary": "Origin, Accept-Encoding",
+      "access-control-allow-credentials": "true",
+      "cache-control": "max-age=43200",
+      "pragma": "no-cache",
+      "expires": "-1",
+      "x-content-type-options": "nosniff",
+      "etag": "W/\"53-hfEnumeNh6YirfjyjaujcOPPT+s\"",
+      "via": "1.1 vegur",
+      "cf-cache-status": "HIT",
+      "age": "19415",
+      "accept-ranges": "bytes",
+      "server": "cloudflare",
+      "cf-ray": "84ba91f7489b040c-FRA",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "x-node-red-request-node": "7e83e64c"
+    },
+    "responseUrl": "https://jsonplaceholder.typicode.com/todos/1",
+    "redirectList": [],
+    "retry": 0
+  }
+}
+</code>
+</pre>
+</details>
 
-![](.github/assets/demo_2.png)
+## Support and Feedback
 
-### Usage with ChatGPT Prompt
+If you encounter any issues or have any feedback regarding the Node-RED SSE Package, please feel free to open an issue on the package's [GitHub repository](https://github.com/tq-bit/node-red-contrib-trace-messages). I appreciate your feedback and will do my best to address any problems or feature requests.
 
-If you aren't a developer, but familiar with ChatGPT, you can use the following prompt to have the famous AI explain possible issues to you:
+## License
 
-> You are a Javascript developer responsible for a data pipeline. I will provide you an array of objects and your task will be to explain what properties in the object's 'message' property change and how they might affect downstream nodes. If they a downstream node, add the emjoy '❗' in front of the explanation. If they affect several donwstream nodes, add the emjoy '⚠️' in front of the explanation. Each object has a 'sourceNode'. When providing explanations, assume that the sourceNode's name describes a possible logical applied to the message object.
+The Node-RED SSE Package is released under the Apache 2.0 license. Please refer to the `license` file in the package repository for more information.

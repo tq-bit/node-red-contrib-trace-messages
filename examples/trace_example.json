@@ -1,0 +1,288 @@
+[
+    {
+        "id": "33ea9c2a529af481",
+        "type": "snapshot",
+        "z": "85386247b6cb2b54",
+        "name": "",
+        "ignore": "",
+        "x": 160,
+        "y": 380,
+        "wires": [
+            [
+                "e511e749926e0dba"
+            ]
+        ]
+    },
+    {
+        "id": "45d772733e5c1ea6",
+        "type": "transaction",
+        "z": "85386247b6cb2b54",
+        "name": "",
+        "ignore": "",
+        "x": 170,
+        "y": 340,
+        "wires": [
+            [
+                "58e9af67a2ca0b22"
+            ]
+        ]
+    },
+    {
+        "id": "e511e749926e0dba",
+        "type": "debug",
+        "z": "85386247b6cb2b54",
+        "name": "Print Snapshot",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 380,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "58e9af67a2ca0b22",
+        "type": "debug",
+        "z": "85386247b6cb2b54",
+        "name": "Print Transaction",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 370,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "d5534eb0c652c49b",
+        "type": "inject",
+        "z": "85386247b6cb2b54",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 60,
+        "wires": [
+            [
+                "e720ad3fda390317"
+            ]
+        ]
+    },
+    {
+        "id": "e720ad3fda390317",
+        "type": "function",
+        "z": "85386247b6cb2b54",
+        "name": "Set message topic",
+        "func": "msg.topic = \"Trace me\"\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 60,
+        "wires": [
+            [
+                "061d8e72a9f3b7da"
+            ]
+        ]
+    },
+    {
+        "id": "061d8e72a9f3b7da",
+        "type": "function",
+        "z": "85386247b6cb2b54",
+        "name": "Set message payload",
+        "func": "msg.payload = {\n    message: \"I am being traced\"\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 60,
+        "wires": [
+            [
+                "6d2ea66d942a61ab"
+            ]
+        ]
+    },
+    {
+        "id": "4f8824a5dcde4a04",
+        "type": "debug",
+        "z": "85386247b6cb2b54",
+        "name": "Print Result",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 710,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "6d2ea66d942a61ab",
+        "type": "function",
+        "z": "85386247b6cb2b54",
+        "name": "Set msg.tray props",
+        "func": "msg.tray = [ \"One\", \"Two\", \"Three\" ]\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 100,
+        "wires": [
+            [
+                "5213280d268d46ee"
+            ]
+        ]
+    },
+    {
+        "id": "5213280d268d46ee",
+        "type": "http request",
+        "z": "85386247b6cb2b54",
+        "name": "Make HTTP Request",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://jsonplaceholder.typicode.com/todos/1",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 520,
+        "y": 100,
+        "wires": [
+            [
+                "4f8824a5dcde4a04"
+            ]
+        ]
+    },
+    {
+        "id": "daf2a00e3a6c2fc4",
+        "type": "catch",
+        "z": "85386247b6cb2b54",
+        "name": "",
+        "scope": null,
+        "uncaught": false,
+        "x": 140,
+        "y": 260,
+        "wires": [
+            [
+                "6cda7869969e98f4"
+            ]
+        ]
+    },
+    {
+        "id": "4adab0729fa89688",
+        "type": "inject",
+        "z": "85386247b6cb2b54",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 180,
+        "wires": [
+            [
+                "528baf7956c6dc49"
+            ]
+        ]
+    },
+    {
+        "id": "528baf7956c6dc49",
+        "type": "function",
+        "z": "85386247b6cb2b54",
+        "name": "Set message topic",
+        "func": "msg.topic = \"Trace me\"\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 180,
+        "wires": [
+            [
+                "b9d4e6e173fe5780"
+            ]
+        ]
+    },
+    {
+        "id": "b9d4e6e173fe5780",
+        "type": "function",
+        "z": "85386247b6cb2b54",
+        "name": "Throw an error",
+        "func": "throw new Error(\"This is some error\")",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6cda7869969e98f4",
+        "type": "debug",
+        "z": "85386247b6cb2b54",
+        "name": "Print Error",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 290,
+        "y": 260,
+        "wires": []
+    }
+]
